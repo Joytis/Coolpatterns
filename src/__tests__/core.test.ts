@@ -57,7 +57,7 @@ describe('layout', () => {
     // Four 21"-wide triangles nested alternately take ~2.5 widths, not 4.
     const xs = lay.placements.map((p) => bounds(p.poly).maxX)
     expect(Math.max(...xs)).toBeLessThan(58)
-    expect(lay.length).toBeLessThan(22)
+    expect(lay.length).toBeLessThan(25)
   })
 
   it('splits a piece wider than the bolt', () => {

@@ -26,10 +26,14 @@ export interface PatternPiece {
   allowance: number
   /** Grainline direction in piece coordinates. */
   grain: 'vertical' | 'horizontal'
+  /** Grain direction in degrees (0 = +x, 90 = +y), when it isn't simply vertical or horizontal. */
+  grainAngle?: number
   /** Appliqué pieces are cut and stitched onto a base piece. */
   kind?: 'pieced' | 'applique'
   notes?: string[]
 }
+
+export const grainAngleOf = (piece: PatternPiece): number => piece.grainAngle ?? (piece.grain === 'vertical' ? 90 : 0)
 
 export const cutOutline = (piece: PatternPiece): Polygon => offsetPolygon(piece.outline, piece.allowance)
 

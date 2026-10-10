@@ -138,13 +138,17 @@ function drawPrint(ctx: CanvasRenderingContext2D, f: Fabric) {
       }
       break
     }
-    default:
-      // Solid: a faint weave so the 3D preview still reads as cloth.
-      ctx.globalAlpha = 0.06
-      ctx.fillStyle = '#000'
-      for (let i = 0; i < TILE; i += 4) ctx.fillRect(i, 0, 1, TILE)
-      for (let i = 0; i < TILE; i += 4) ctx.fillRect(0, i, TILE, 1)
+    default: {
+      // Solid: faint speckle so the 3D preview still reads as cloth.
+      let seed = 7
+      const rand = () => ((seed = (seed * 16807) % 2147483647) / 2147483647)
+      for (let i = 0; i < 1400; i++) {
+        ctx.globalAlpha = 0.05
+        ctx.fillStyle = rand() > 0.5 ? '#000' : '#fff'
+        ctx.fillRect(rand() * TILE, rand() * TILE, 2, 2)
+      }
       ctx.globalAlpha = 1
+    }
   }
 }
 

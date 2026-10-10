@@ -57,7 +57,7 @@ export function generateCanopy(c: CanopyConfig, seamAllowance: number): PatternR
   const roleFor = (accent: boolean, k: number) => ((accent !== swap(k)) ? ROLE.roofAccent : ROLE.roofMain)
 
   const n = Math.max(2, Math.round(c.roof.count))
-  const roofPieces: { key: string; name: string; outline: Polygon; accent: boolean }[] = []
+  const roofPieces: { key: string; name: string; outline: Polygon; accent: boolean; grainAngle?: number }[] = []
   switch (c.roof.design) {
     case 'solid':
       roofPieces.push({ key: 'roof', name: 'Roof face', outline: face, accent: false })
@@ -80,7 +80,15 @@ export function generateCanopy(c: CanopyConfig, seamAllowance: number): PatternR
         const ray = clipBandY([v(x0, 0), v(x1, 0), v(0, slant)], 0, topY)
         // Rays mirror around the centre, so the outer ones are the same piece.
         const m = Math.min(i, n - 1 - i)
-        roofPieces.push({ key: `roof-ray${m + 1}${i > n - 1 - i ? 'm' : ''}`, name: `Roof ray ${m + 1}${i > n - 1 - i ? ' (mirrored)' : ''}`, outline: ray, accent: i % 2 === 1 })
+        // Each ray's grain runs up its centre line, so rays nest on the bolt.
+        const grainAngle = (Math.atan2(slant, -(x0 + x1) / 2) * 180) / Math.PI
+        roofPieces.push({
+          key: `roof-ray${m + 1}${i > n - 1 - i ? 'm' : ''}`,
+          name: `Roof ray ${m + 1}${i > n - 1 - i ? ' (mirrored)' : ''}`,
+          outline: ray,
+          accent: i % 2 === 1,
+          grainAngle,
+        })
       }
       break
     case 'triangles': {
@@ -113,6 +121,7 @@ export function generateCanopy(c: CanopyConfig, seamAllowance: number): PatternR
         outline: p.outline,
         allowance: sa,
         grain: 'vertical',
+        grainAngle: p.grainAngle,
         notes: [`Roof faces: ${ROOF_DESIGN_LABELS[c.roof.design]}.`],
         frame,
         lift: 0.4,

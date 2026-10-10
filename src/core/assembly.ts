@@ -28,6 +28,7 @@ export interface AssemblyPart {
   outline: Polygon
   allowance: number
   grain: 'vertical' | 'horizontal'
+  grainAngle?: number
   kind?: 'pieced' | 'applique'
   notes?: string[]
   frame: Frame
@@ -65,6 +66,7 @@ export function piecesFromParts(parts: AssemblyPart[]): PatternPiece[] {
       outline: p.outline,
       allowance: p.allowance,
       grain: p.grain,
+      grainAngle: p.grainAngle,
       kind: p.kind,
       notes: p.notes,
     })
